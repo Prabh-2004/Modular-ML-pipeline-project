@@ -59,3 +59,62 @@ try:
 except Exception as e:
     logger.exception(e)
     raise e    
+
+
+
+# # Another approach to run the pipelines, all from the main file
+# # Without creating a seperate pipelines module.
+# from src.datascience import logger
+# from src.datascience.config.configuration import ConfigurationManager
+# from src.datascience.components import (
+#     data_ingestion,
+#     data_transformation,
+#     data_validation,
+#     model_trainer,
+#     model_evaluation
+# )
+
+# class DataIngestionPipeline:
+#     def __init__(self):
+#         pass
+
+#     def initiate_data_ingestion(self):
+#         try:
+#             logger.info(f">>>>>> {STAGE_NAME} started <<<<<<")
+#             config = ConfigurationManager()
+#             data_ingestion_config = config.get_data_ingestion_config()
+#             ingestion = data_ingestion.DataIngestion(config=data_ingestion_config)
+#             ingestion.download_file()
+#             ingestion.extract_zip()
+#             logger.info(f">>>>>> {STAGE_NAME} completed <<<<<<\n\nx==========x")
+#         except Exception as e:
+#             logger.exception(e)
+#             raise e
+
+
+# class DataValidationPipeline:
+#     def __init__(self):
+#         pass
+
+#     def initiate_data_validation(self):
+#         try:
+#             logger.info(f">>>>>> {STAGE_NAME} started <<<<<<")
+#             config = ConfigurationManager()
+#             data_validation_config = config.get_validation_config()
+#             validation = data_validation.DataValidation(config=data_validation_config)
+#             validation.validate_all_columns()
+#             logger.info(f">>>>>> {STAGE_NAME} completed <<<<<<\n\nx==========x")
+#         except Exception as e:
+#             logger.exception(e)
+#             raise e
+        
+
+# if __name__=="__main__":
+
+#     STAGE_NAME = "Data Ingestion"
+#     data_ingestion = DataIngestionPipeline()
+#     data_ingestion.initiate_data_ingestion()
+
+#     STAGE_NAME = "Data Validation"
+#     data_validation = DataValidationPipeline()
+#     data_validation.initiate_data_validation()

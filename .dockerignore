@@ -1,0 +1,8 @@
+artifacts
+logs
+mlruns
+research
+venv
+.gitignore
+LICENSE
+README.md
