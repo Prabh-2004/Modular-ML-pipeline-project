@@ -8,10 +8,10 @@ from src.datascience.utils.common import save_to_json
 from src.datascience.entity.config_entity import ModelEvaluationConfig
 from pathlib import Path
 
-import os
-os.environ["MLFLOW_TRACKING_URI"]="https://dagshub.com/prabhjsm/DataScience-end-to-end.mlflow"
-os.environ["MLFLOW_TRACKING_USERNAME"]="prabhjsm"
-os.environ["MLFLOW_TRACKING_PASSWORD"]="755eb397871dbad4cc58fdc8da74509488eb92bc"
+
+os.environ["MLFLOW_TRACKING_URI"]=os.getenv("MLFLOW_TRACKING_URI")
+os.environ["MLFLOW_TRACKING_USERNAME"]=os.getenv("MLFLOW_TRACKING_USERNAME")
+os.environ["MLFLOW_TRACKING_PASSWORD"]=os.getenv("MLFLOW_TRACKING_PASSWORD")
 
 # Model eval component
 class ModelEvaluation:
@@ -40,7 +40,6 @@ class ModelEvaluation:
 
             # Saving metrics in local
             scores = {"rmse": rmse, "mae": mae, "r2": r2}
-            # metric_path = Path(self.config.metric_file_name)
             save_to_json(path=Path(self.config.metric_file_name), data=scores)
 
             mlflow.log_params(self.config.all_params)

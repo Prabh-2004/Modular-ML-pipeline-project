@@ -8,6 +8,10 @@ from src.datascience.entity.config_entity import (
     ModelEvaluationConfig
 )
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 class ConfigurationManager:
     def __init__(self, config_filepath=CONFIG_FILE_PATH, params_filepath=PARAMS_FILE_PATH, schema_filepath=SCHEMA_FILE_PATH):
         self.config = read_yaml(config_filepath)
@@ -88,6 +92,6 @@ class ConfigurationManager:
             metric_file_name=config.metric_file_name,
             all_params=params,
             target_column=schema.name,
-            mlflow_uri="https://dagshub.com/prabhjsm/DataScience-end-to-end.mlflow"
+            mlflow_uri = os.getenv("MLFLOW_TRACKING_URI")
         )
         return model_evaluation_config
