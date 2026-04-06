@@ -1,48 +1,44 @@
-from flask import Flask, render_template, request
-import pandas as pd
-import numpy as np
-from src.datascience.pipeline.prediction_pipeline import PredictionPipeline
 import os
+import streamlit as st
+import numpy as np
+import pandas as pd
+from src.datascience.pipeline.prediction_pipeline import PredictionPipeline
 
-app = Flask(__name__)
+st.set_page_config(page_title="Wine Quality Model", layout='centered')
 
-@app.route("/", methods=["GET"])
-def homePage():
-    return render_template("index.html")
+st.title("Predict Wine Quality")
+st.write("This app predicts the Wine quality based on the following set of features, using an ElasticNet Machine learning Regression Model.")
 
-@app.route("/train", methods=["GET"])
-def train():
-    os.system("python main.py")
-    return "Training Successful!"
+if "training_status" not in st.session_state:
+    st.session_state.training_status = False
 
-@app.route("/predict", methods=["POST", "GET"])
-def index():
-    if request.method == "POST":
-        try:
-            fixed_acidity = float(request.form['fixed_acidity'])
-            volatile_acidity =float(request.form['volatile_acidity'])
-            citric_acid =float(request.form['citric_acid'])
-            residual_sugar =float(request.form['residual_sugar'])
-            chlorides =float(request.form['chlorides'])
-            free_sulfur_dioxide =float(request.form['free_sulfur_dioxide'])
-            total_sulfur_dioxide =float(request.form['total_sulfur_dioxide'])
-            density =float(request.form['density'])
-            pH =float(request.form['pH'])
-            sulphates =float(request.form['sulphates'])
-            alcohol =float(request.form['alcohol'])
+if not st.session_state.training_status:
+    with st.spinner("Training the Model..."):
+        os.system("python main.py")
+    st.session_state.training_status = True
 
-            data = [[fixed_acidity, volatile_acidity, citric_acid, residual_sugar, chlorides, free_sulfur_dioxide, total_sulfur_dioxide, density, pH, sulphates, alcohol]]
-            data = np.array(data)
+fixed_acidity = st.number_input(label="Fixed Acidity")
+volatile_acidity = st.number_input("Volatile Acidity")
+citric_acid =st.number_input("Citric Acid")
+residual_sugar =st.number_input("Residual Sugar")
+chlorides =st.number_input("Chlorides")
+free_sulfur_dioxide =st.number_input("Free Sulphur Dioxide")
+total_sulfur_dioxide =st.number_input("Total Sulphur Dioxide")
+density =st.number_input("Density")
+pH =st.number_input("pH")
+sulphates =st.number_input("Sulphates")
+alcohol =st.number_input("Alcohol")
 
-            obj = PredictionPipeline()
-            prediction = obj.predict(data)
+data = [[fixed_acidity, volatile_acidity, citric_acid, residual_sugar, chlorides, free_sulfur_dioxide, total_sulfur_dioxide, density, pH, sulphates, alcohol]]
 
-            return render_template("results.html", prediction=str(prediction))
-        except Exception as e:
-            print(f"Exception: {e}")
-            return "An error occured."
-    else:
-        return render_template("index.html")
-    
-if __name__=="__main__":
-    app.run(host="0.0.0.0", port=8000, debug=True)
+data = np.array(data)
+
+st.divider()
+
+
+if st.button("Predict Wine Quality"):
+    with st.spinner("Predicting..."):
+        obj = PredictionPipeline()
+        prediction = obj.predict(data)
+
+    st.success(f"The Predicted Qauality is: {int(np.round(prediction, 0)[-1])}")
