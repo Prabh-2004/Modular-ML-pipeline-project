@@ -7,3 +7,4 @@ venv
 LICENSE
 README.md
 .env
+setup.py
